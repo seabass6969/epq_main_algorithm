@@ -1,5 +1,5 @@
 # Debug purposes only
-PRODUCE_DIAGRAM = True
+PRODUCE_DIAGRAM = False
 DEBUG = False
 
 sample_rate = 44100 
