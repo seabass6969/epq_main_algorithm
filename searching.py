@@ -30,6 +30,6 @@ def searching(file_name, file_start):
 
 
 if __name__ == "__main__":
-    matched = searching("27_tapping.wav", "test/new_test/")
+    matched = searching("27_tapping.wav", "../songs/test/new_test/")
     print(matched)
 # "songs/dance_of_the_sugar_plum_fairy.ogg"
