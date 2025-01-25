@@ -17,16 +17,21 @@ def scoring_song(time_offsets):
     return numpy.max(counts)
 
 def searching(file_name, file_start):
-    deltas_hashes = list(spectrogram_analysis.searchPairs(file_name, file_start))
-    print(len(deltas_hashes))
-    songs_dict = database.search_points(deltas_hashes)
+    hashes = list(spectrogram_analysis.searchPairs(file_name, file_start))
+    if settings.DEBUG:
+        print(len(hashes))
+    songs_dict = database.search_points(hashes)
     # this returns the original offsets to the song
     song_scores = {}
     for time_offsets in songs_dict.items():
         song_scores[time_offsets[0]] = scoring_song(time_offsets[1])
-    print(song_scores)
-    max_song = max(song_scores, key=lambda x: song_scores[x])
-    return database.get_entry(max_song)
+    if settings.DEBUG:
+        print(song_scores)
+    if song_scores != {}:
+        max_song = max(song_scores, key=lambda x: song_scores[x])
+        return database.get_entry(max_song)
+    else:
+        return "No results :<"
 
 
 if __name__ == "__main__":

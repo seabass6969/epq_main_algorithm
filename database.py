@@ -25,24 +25,23 @@ def search_points(searchPairs):
     time = {}
     conn.execute("VACUUM;")
     conn.execute("PRAGMA synchronous = NORMAL;")
-    if settings.DEBUG:
-        for pairs in tqdm.tqdm(searchPairs):
-            result = conn.execute(
-                f'SELECT Song_ID, Time_Offset FROM points WHERE Hash="{pairs[1]}";'
-            ).fetchall()
-            for r in result:
-                if r[0] not in time:
-                    time[r[0]] = []
-                time[r[0]].append(r[1])
-    else:
-        for pairs in tqdm.tqdm(searchPairs):
-            result = conn.execute(
-                f'SELECT Song_ID, Time_Offset FROM points WHERE Hash="{pairs[1]}";'
-            ).fetchall()
-            for r in result:
-                if r[0] not in time:
-                    time[r[0]] = []
-                time[r[0]].append(r[1])
+    # create a temp table to accomdiate the searching 
+    # It's statistically faster
+    # 10 minutes -> 4 seconds (approximately depanding on which hardware it uses) (tested with the test file "test/new_test/27_tapping.wav")
+    table_UUID_temp = str(uuid.uuid1()).replace("-", "_")
+    conn.execute(f"CREATE TABLE IF NOT EXISTS TEMP_READ_{table_UUID_temp} (data TEXT);")
+    conn.executemany(f"INSERT INTO TEMP_READ_{table_UUID_temp} VALUES(?)", searchPairs)
+    conn.commit()
+    # r_1 = conn.execute("SELECT COUNT(*) FROM TEMP_READ;").fetchone() 
+    # print(r_1)
+    result = conn.execute(f'SELECT Song_ID, Time_Offset FROM points WHERE Hash IN (SELECT TEMP_READ_{table_UUID_temp}.data FROM TEMP_READ_{table_UUID_temp});').fetchall()
+    for r in result:
+        if r[0] not in time:
+            time[r[0]] = []
+        time[r[0]].append(r[1])
+    conn.execute(f"DROP TABLE TEMP_READ_{table_UUID_temp};")
+    conn.commit()
+    conn.close()
 
     return time
 
@@ -88,6 +87,13 @@ def get_entry(ID):
     item = conn.execute(f'SELECT * FROM songs WHERE Song_ID="{ID}";').fetchone()
     return item
 
+def create_queue_request():
+    requester_id = str(uuid.uuid1())
+    conn = connection()
+    conn.execute(f'INSERT INTO queue_requests VALUES ("{requester_id}")')
+    conn.commit()
+    conn.close()
+    return requester_id
 
 if __name__ == "__main__":
     pass

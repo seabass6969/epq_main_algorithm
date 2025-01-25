@@ -107,13 +107,13 @@ def hashPoints(pointA, pointB):
     #         (pointB[1] - pointA[1]).item(),
     #     )
     # )
-    return hash(
+    return str(hash(
         (
             round(pointA[0].item(),0),
             round(pointB[0].item(),0),
             round((pointB[1] - pointA[1]).item(), 1),
         )
-    )
+    ))
 
 
 def searchPairs(song_file, file_start):
@@ -122,10 +122,12 @@ def searchPairs(song_file, file_start):
     """
     sample_rate, data = LoadFile(song_file, file_start)
     peaks = getPeaks(data, sample_rate)
-    print(len(peaks))
+    if settings.DEBUG:
+        print(len(peaks))
     for anchor_point in peaks:
         for target_point in getTargetZonePoints(peaks, anchor_point):
-            yield (round(target_point[1] - anchor_point[1], 1), hashPoints(anchor_point, target_point))
+            # yield (round(target_point[1] - anchor_point[1], 1), hashPoints(anchor_point, target_point))
+            yield (hashPoints(anchor_point, target_point),)
 
 def getPairs(song_file, file_start, uuids):
     sample_rate, data = LoadFile(song_file, file_start)
