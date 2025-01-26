@@ -1,3 +1,4 @@
+import json
 import database
 import settings
 import spectrogram_analysis
@@ -31,7 +32,7 @@ def searching(file_name, file_start):
         max_song = max(song_scores, key=lambda x: song_scores[x])
         return database.get_entry(max_song)
     else:
-        return "No results :<"
+        return json.dumps({"error": "no_result"})
 
 
 if __name__ == "__main__":

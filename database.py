@@ -1,3 +1,4 @@
+import json
 import settings
 import sqlite3
 import spectrogram_analysis
@@ -83,9 +84,15 @@ def adding_entry(song_name, song_author, song_file, song_start_directory, Licens
 
 
 def get_entry(ID):
+    SQL_COMMAND = f'SELECT Name, Author, Stored_Location, License, Original_location, Genre FROM songs WHERE Song_ID="{ID}";'
+
     conn = connection()
-    item = conn.execute(f'SELECT * FROM songs WHERE Song_ID="{ID}";').fetchone()
-    return item
+    conn.row_factory = sqlite3.Row 
+    curs = conn.cursor()
+    item = curs.execute(SQL_COMMAND).fetchone()
+    conn.close()
+    return json.dumps(dict(item))
+    # return dict(item)
 
 def create_queue_request():
     requester_id = str(uuid.uuid1())
@@ -96,4 +103,7 @@ def create_queue_request():
     return requester_id
 
 if __name__ == "__main__":
+    # print(item["Name"])
+    entry = get_entry("f84be331-e4bd-4479-afef-993a93ecf09e")
+    print(entry)
     pass
