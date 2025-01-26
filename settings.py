@@ -1,4 +1,5 @@
 # Debug purposes only
+BUILD = False
 PRODUCE_DIAGRAM = False
 DEBUG = False
 

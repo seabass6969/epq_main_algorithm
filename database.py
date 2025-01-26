@@ -8,7 +8,10 @@ import tqdm
 
 
 def connection():
-    return sqlite3.connect("../database/database.sqlite")
+    if settings.BUILD:
+        return sqlite3.connect("/work/database/database.sqlite")
+    else:
+        return sqlite3.connect("../database/database.sqlite")
 
 
 def write_points(items):
