@@ -1,3 +1,4 @@
+import validation
 import json
 import database
 import settings
@@ -30,7 +31,10 @@ def searching(file_name, file_start):
         print(song_scores)
     if song_scores != {}:
         max_song = max(song_scores, key=lambda x: song_scores[x])
-        return database.get_entry(max_song)
+        if validation.isOutlier(list(song_scores.values()), song_scores[max_song]):
+            return database.get_entry(max_song)
+        else:
+            return json.dumps({"error": "no_result"})
     else:
         return json.dumps({"error": "no_result"})
 

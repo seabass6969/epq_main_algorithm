@@ -69,8 +69,8 @@ def getPeaks(data, sample_rate):
     if settings.PRODUCE_DIAGRAM:
         import matplotlib.pyplot as plt
         _, axs = plt.subplots(2, sharex=True, sharey=True)
-        axs[0].pcolormesh(t, f, spec, shading="gouraud")
-        axs[1].pcolormesh(t, f, filtered_spectrogram, shading="gouraud")
+        axs[0].pcolormesh(t, f, spec, shading="auto")
+        axs[1].pcolormesh(t, f, filtered_spectrogram, shading="auto")
         plt.ylabel('Frequency [Hz]')
         plt.xlabel('Time [s]')
         y,x = real_j.T
@@ -146,7 +146,8 @@ def createSpectrogram(audio, sample_rate):
     return spectrogram(audio, sample_rate, nperseg = nperseg)
 
 if __name__ == "__main__":
-    pairs = getPairs('38 Kevin MacLeod - Lift Motif.mp3', "songs/Kevin_MacLeod_Classical_sampler", "123123123123")
+    # settings.PRODUCE_DIAGRAM = True
+    pairs = getPairs('27 Kevin MacLeod - J. S. Bach Prelude in C - BWV 846.mp3', "songs/Kevin_MacLeod_Classical_sampler", "123123123123")
     print(len(list(pairs)))
     # print(len(peaks))
     
