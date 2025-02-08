@@ -47,6 +47,8 @@ def convertTFtorealTF(coordinates, f, t):
 
 def getPeaks(data, sample_rate):
     f, t, spec = createSpectrogram(data, sample_rate=sample_rate)
+    if settings.DEBUG:
+        print(np.array2string(spec, threshold=np.inf))
     filtered_spectrogram = maximum_filter(spec, size=settings.box_size, mode="constant", cval=0)
     peak_boolean_mask = (spec == filtered_spectrogram)
     peak_times, peak_frequencies = peak_boolean_mask.nonzero()
