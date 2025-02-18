@@ -7,6 +7,7 @@ import numpy
 
 
 def scoring_song(time_offsets):
+    # Scores to each songs
     time_gap = 0.5
     bin = numpy.arange((min(time_offsets)), (max(time_offsets)) + 1 + time_gap)
     counts, bins = numpy.histogram(time_offsets, bins=bin)

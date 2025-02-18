@@ -1,3 +1,4 @@
+# settings file for configuration of the program
 # Debug purposes only
 BUILD = False
 PRODUCE_DIAGRAM = False
